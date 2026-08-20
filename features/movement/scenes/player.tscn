@@ -1,0 +1,229 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://features/movement/player.gd" id="1_player"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape"]
+radius = 0.42
+height = 1.8
+
+[sub_resource type="SphereMesh" id="HandPalmMesh"]
+radius = 0.5
+height = 1.0
+radial_segments = 16
+rings = 8
+
+[sub_resource type="CapsuleMesh" id="FingerMesh"]
+radius = 0.045
+height = 0.24
+radial_segments = 12
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="HandMaterial"]
+albedo_color = Color(0.42, 0.28, 0.21, 1)
+roughness = 0.88
+
+[sub_resource type="BoxMesh" id="ArmMesh"]
+size = Vector3(0.28, 0.30, 0.92)
+
+[sub_resource type="StandardMaterial3D" id="SleeveMaterial"]
+albedo_color = Color(0.018, 0.028, 0.032, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="FlashlightBodyMesh"]
+top_radius = 0.07
+bottom_radius = 0.09
+height = 0.48
+radial_segments = 20
+
+[sub_resource type="StandardMaterial3D" id="FlashlightBodyMaterial"]
+albedo_color = Color(0.025, 0.032, 0.035, 1)
+metallic = 0.78
+roughness = 0.28
+
+[sub_resource type="CylinderMesh" id="FlashlightHeadMesh"]
+top_radius = 0.105
+bottom_radius = 0.105
+height = 0.12
+radial_segments = 20
+
+[sub_resource type="StandardMaterial3D" id="FlashlightLensMaterial"]
+albedo_color = Color(0.65, 0.86, 0.96, 1)
+emission_enabled = true
+emission = Color(0.35, 0.75, 1, 1)
+emission_energy_multiplier = 2.5
+roughness = 0.15
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0, 1.58, 0)
+current = true
+fov = 76.0
+near = 0.03
+far = 200.0
+
+[node name="ViewModel" type="Node3D" parent="Camera3D"]
+position = Vector3(0.34, -0.34, -0.62)
+
+[node name="Flashlight" type="SpotLight3D" parent="Camera3D/ViewModel"]
+position = Vector3(0.06, 0.035, -0.535)
+rotation_degrees = Vector3(-2, 0, 0)
+light_color = Color(0.78, 0.91, 1, 1)
+light_energy = 9.0
+spot_range = 26.0
+spot_angle = 31.0
+spot_angle_attenuation = 1.15
+shadow_enabled = true
+shadow_bias = 0.015
+
+[node name="Arm" type="MeshInstance3D" parent="Camera3D/ViewModel"]
+position = Vector3(-0.04, -0.06, 0.20)
+rotation_degrees = Vector3(12, -8, 8)
+mesh = SubResource("ArmMesh")
+material_override = SubResource("SleeveMaterial")
+
+[node name="Hand" type="Node3D" parent="Camera3D/ViewModel"]
+position = Vector3(0.03, 0.01, -0.16)
+rotation_degrees = Vector3(-10, 8, -8)
+
+[node name="Palm" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+mesh = SubResource("HandPalmMesh")
+material_override = SubResource("HandMaterial")
+scale = Vector3(0.28, 0.18, 0.34)
+
+[node name="Index" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+position = Vector3(0.17, 0.01, -0.10)
+rotation_degrees = Vector3(68, 8, 8)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Middle" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+position = Vector3(0.12, 0.00, -0.15)
+rotation_degrees = Vector3(70, 2, 4)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Ring" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+position = Vector3(0.07, -0.01, -0.17)
+rotation_degrees = Vector3(72, -5, 0)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Pinky" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+position = Vector3(0.01, -0.02, -0.17)
+rotation_degrees = Vector3(74, -10, -4)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Thumb" type="MeshInstance3D" parent="Camera3D/ViewModel/Hand"]
+position = Vector3(0.18, 0.07, -0.22)
+rotation_degrees = Vector3(62, -35, -20)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+scale = Vector3(1.15, 1.0, 1.0)
+
+[node name="FlashlightBody" type="MeshInstance3D" parent="Camera3D/ViewModel"]
+position = Vector3(0.06, 0.03, -0.2)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightBodyMesh")
+material_override = SubResource("FlashlightBodyMaterial")
+
+[node name="FlashlightHead" type="MeshInstance3D" parent="Camera3D/ViewModel"]
+position = Vector3(0.06, 0.035, -0.47)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightHeadMesh")
+material_override = SubResource("FlashlightBodyMaterial")
+
+[node name="Lens" type="MeshInstance3D" parent="Camera3D/ViewModel"]
+position = Vector3(0.06, 0.035, -0.535)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightHeadMesh")
+material_override = SubResource("FlashlightLensMaterial")
+
+[node name="LeftViewModel" type="Node3D" parent="Camera3D"]
+position = Vector3(-0.34, -0.34, -0.62)
+
+[node name="Flashlight" type="SpotLight3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(-0.06, 0.035, -0.535)
+rotation_degrees = Vector3(-2, 0, 0)
+light_color = Color(0.78, 0.91, 1, 1)
+light_energy = 9.0
+spot_range = 26.0
+spot_angle = 31.0
+spot_angle_attenuation = 1.15
+shadow_enabled = true
+shadow_bias = 0.015
+visible = false
+
+[node name="Arm" type="MeshInstance3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(0.04, -0.06, 0.20)
+rotation_degrees = Vector3(12, 8, -8)
+mesh = SubResource("ArmMesh")
+material_override = SubResource("SleeveMaterial")
+
+[node name="Hand" type="Node3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(-0.03, 0.01, -0.16)
+rotation_degrees = Vector3(-10, -8, 8)
+
+[node name="Palm" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+mesh = SubResource("HandPalmMesh")
+material_override = SubResource("HandMaterial")
+scale = Vector3(0.28, 0.18, 0.34)
+
+[node name="Index" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+position = Vector3(-0.17, 0.02, -0.12)
+rotation_degrees = Vector3(58, -12, 16)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+scale = Vector3(0.95, 1.0, 1.0)
+
+[node name="Middle" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+position = Vector3(-0.12, 0.03, -0.17)
+rotation_degrees = Vector3(62, -5, 10)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Ring" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+position = Vector3(-0.06, 0.02, -0.19)
+rotation_degrees = Vector3(66, 3, 5)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="Pinky" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+position = Vector3(0.01, 0.00, -0.18)
+rotation_degrees = Vector3(70, 10, 0)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+scale = Vector3(0.85, 1.0, 1.0)
+
+[node name="Thumb" type="MeshInstance3D" parent="Camera3D/LeftViewModel/Hand"]
+position = Vector3(-0.18, -0.01, -0.06)
+rotation_degrees = Vector3(52, 45, 12)
+mesh = SubResource("FingerMesh")
+material_override = SubResource("HandMaterial")
+
+[node name="FlashlightBody" type="MeshInstance3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(-0.06, 0.03, -0.2)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightBodyMesh")
+material_override = SubResource("FlashlightBodyMaterial")
+visible = false
+
+[node name="FlashlightHead" type="MeshInstance3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(-0.06, 0.035, -0.47)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightHeadMesh")
+material_override = SubResource("FlashlightBodyMaterial")
+visible = false
+
+[node name="Lens" type="MeshInstance3D" parent="Camera3D/LeftViewModel"]
+position = Vector3(-0.06, 0.035, -0.535)
+rotation_degrees = Vector3(88, 0, 0)
+mesh = SubResource("FlashlightHeadMesh")
+material_override = SubResource("FlashlightLensMaterial")
+visible = false
